@@ -74,6 +74,42 @@ app.get('/shoes', (req, res) => {
         }
     });
 });
+// 6 Buscar zapatillas por marca
+app.get('/brand/:brand', (req, res) => {
+    const count = req.query.count || 40;
+    sneaks.getProducts(req.params.brand, count, (error, products) => {
+        if (error) {
+            res.status(500).json({ error: "Error fetching products by brand" });
+        } else {
+            res.json(products);
+        }
+    });
+});
+
+// 7 Filtrar por precio
+app.get('/filter/price', (req, res) => {
+    const minPrice = parseFloat(req.query.min) || 0;
+    const maxPrice = parseFloat(req.query.max) || Infinity;
+    sneaks.findAll((error, products) => {
+        if (error) {
+            res.status(500).json({ error: "Error fetching products" });
+        } else {
+            const filteredProducts = products.filter(p => p.retailPrice >= minPrice && p.retailPrice <= maxPrice);
+            res.json(filteredProducts);
+        }
+    });
+});
+
+// 8 Obtener todo el contenido
+app.get('/all', (req, res) => {
+    sneaks.findAll((error, products) => {
+        if (error) {
+            res.status(500).json({ error: "Error fetching all products" });
+        } else {
+            res.json(products);
+        }
+    });
+});
 
 // 6 Redirección de la ruta raíz a /home
 app.get('/', (req, res) => {
@@ -85,7 +121,7 @@ app.get('/docs', (req, res) => {
         "API Name": "Sneaks API",
         "Version": "1.0",
         "Description": "API para obtener información y precios de zapatillas.",
-        "Base URL": "https://sneaks.onrender.com",
+        "Base URL": "https://zapatillasapi-71a4.onrender.com",
         "Endpoints": {
             "/id/:id": {
                 "description": "Obtener información de una zapatilla por su ID.",
@@ -129,7 +165,7 @@ app.get('/docs/html', (req, res) => {
         <body>
             <h1>📌 Sneaks API - Documentación</h1>
             <p>Esta API permite obtener información y precios de zapatillas.</p>
-            <p><strong>Base URL:</strong> <code>https://sneaks.onrender.com</code></p>
+            <p><strong>Base URL:</strong> <code>https://zapatillasapi-71a4.onrender.com</code></p>
 
             <h2>🔹 Endpoints Disponibles</h2>
             <ul>
